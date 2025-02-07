@@ -30,12 +30,12 @@ class Listener:
         message[0] = 0x02
         last_packet = time.time()
         ser: "serial.Serial" = self.client.ser
-        while message[-1] != b'\x03':
+        while message[-1] != 0x03:
             now = time.time()
             message.append(int.from_bytes(ser.read(1), 'big'))
             if now - last_packet > self.packet_timout:
                 print("Timeout. Failed to receive a full message.")
-                if message[-1] != b'\x02':
+                if message[-1] != 0x02:
                     print("Timeout. Failed to to start a new message.")
                     return
                 return self.parse_new_message()
