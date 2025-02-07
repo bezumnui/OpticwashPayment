@@ -1,6 +1,5 @@
 import threading
 import time
-import typing
 
 import serial
 
@@ -20,7 +19,7 @@ class Listener:
 
         while self.active:
             r = ser.read(1)
-            if r == '\x02':
+            if r == b'\x02':
                 self.parse_new_message()
                 continue
             print(f"Failed to start a new message. Failed to read 0x02. Got {r}")
@@ -28,14 +27,14 @@ class Listener:
 
     def parse_new_message(self):
         message = bytearray(1)
-        message[0] = '\x02'
+        message[0] = 0x02
         last_packet = time.time()
-        while message[-1] != '\x03':
+        while message[-1] != b'\x03':
             now = time.time()
             message.append(self.client.ser.read(1))
             if now - last_packet > self.packet_timout:
                 print("Timeout. Failed to receive a full message.")
-                if message[-1] != '\x02':
+                if message[-1] != b'\x02':
                     print("Timeout. Failed to to start a new message.")
                     return
                 return self.parse_new_message()

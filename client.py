@@ -45,7 +45,7 @@ if __name__ == '__main__':
     opticwash = Opticwash()
     opticwash.open()
     opticwash.listen()
-    input("Press enter to stop listening")
+    input("Press enter to stop listening\n")
 
     opticwash.open_cabinet()
     opticwash.stop_listening()
