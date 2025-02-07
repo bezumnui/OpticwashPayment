@@ -23,7 +23,7 @@ class Listener:
             if r == 0x02:
                 self.parse_new_message()
                 continue
-            print(f"Failed to start a new message. Failed to read 0x02. Got {hex(r)}")
+            print(f"Failed to start a new message. Failed to read 0x02. Got {r}")
 
 
     def parse_new_message(self):
