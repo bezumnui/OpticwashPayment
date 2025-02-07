@@ -33,6 +33,23 @@ class Command:
         return buffer
 
     @staticmethod
+    def from_raw(buffer: bytearray):
+        address = int.from_bytes(buffer[1:3], 'big')
+        packet_label = int.from_bytes(buffer[3:5], 'big')
+        command = buffer[5]
+        packet_type = buffer[6]
+        data = buffer[8:58]
+
+        checksum = Command.calculate_checksum(buffer[:59])
+        if checksum != buffer[59]:
+            raise ValueError("Checksum mismatch")
+
+        command = Command(command, packet_type, address, packet_label, data)
+        return command
+
+
+
+    @staticmethod
     def calculate_checksum(buffer: bytearray):
         checksum = 0
         for byte in buffer:

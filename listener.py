@@ -3,6 +3,8 @@ import time
 
 import serial
 
+from command import Command
+
 
 class Listener:
     def __init__(self, client: "Opticwash"):
@@ -52,3 +54,12 @@ class Listener:
         for byte, i in zip(message, range(len(message))):
             print(f"{i}:{hex(byte)}", end=' ')
         print()
+        try:
+            command = Command.from_raw(message)
+            self._on_command(command)
+        except ValueError as e:
+            print(f"Failed to parse command: {e}")
+
+
+    def _on_command(self, command: "Command"):
+        print(f"Command received: {command}")
