@@ -4,6 +4,7 @@ import time
 import serial
 
 from command import Command
+from screen import ScreenID
 
 
 class Listener:
@@ -63,3 +64,11 @@ class Listener:
 
     def _on_command(self, command: "Command"):
         print(f"Command received: {command}")
+        if command.command == 1:
+            self._process_status(command)
+        # else:
+
+
+    def _process_status(self, command: "Command"):
+        screen = ScreenID(command.data[1])
+        print(f"Screen: {screen.name}")

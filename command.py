@@ -9,6 +9,7 @@ class Command:
     address: typing.Optional[int]
     packet_label: typing.Optional[int]
     data: typing.Optional[bytes]
+    response_type = 0
 
     def raw_command(self):
         buffer = bytearray(0)
@@ -38,7 +39,11 @@ class Command:
         packet_label = int.from_bytes(buffer[3:5], 'big')
         command = buffer[5]
         packet_type = buffer[6]
-        data = buffer[8:58]
+        response_type = buffer[7]
+        if buffer[8] != 0x32 or buffer[9] != 0x00:
+            raise ValueError("Invalid packet header")
+
+        data = buffer[10:58]
 
         checksum = Command.calculate_checksum(buffer[:59])
         # print(f"Checksum: {hex(checksum)}, Waiting for {hex(buffer[60])}")
@@ -46,6 +51,7 @@ class Command:
             raise ValueError("Checksum mismatch")
 
         command = Command(command, packet_type, address, packet_label, data)
+        command.response_type = response_type
         return command
 
 

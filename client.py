@@ -9,6 +9,7 @@ class Opticwash:
     def __init__(self):
         self.ser: typing.Optional[serial.Serial] = None
         self.listener = Listener(self)
+        self.packet_id = 0
 
     def open(self, port = '/dev/ttyACM0'):
         self.ser = serial.Serial(port, 9600)
@@ -23,9 +24,12 @@ class Opticwash:
         self.listener.stop()
 
     def send_command(self, command: Command):
+        command.packet_label = self.packet_id & 0xFFFF
+        self.packet_id += 1
         buffer = command.raw_command()
         self.ser.write(buffer)
         pass
+
 
 
     def open_cabinet(self):
