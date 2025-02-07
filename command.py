@@ -41,6 +41,7 @@ class Command:
         data = buffer[8:58]
 
         checksum = Command.calculate_checksum(buffer[:59])
+        print(f"Checksum: {hex(checksum)}, Waiting for {hex(buffer[59])}")
         if checksum != buffer[59]:
             raise ValueError("Checksum mismatch")
 
