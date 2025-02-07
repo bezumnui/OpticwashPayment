@@ -31,7 +31,7 @@ class Listener:
         last_packet = time.time()
         while message[-1] != b'\x03':
             now = time.time()
-            message.append(int(self.client.ser.read(1)))
+            message.append(int.from_bytes(self.client.ser.read(1)))
             if now - last_packet > self.packet_timout:
                 print("Timeout. Failed to receive a full message.")
                 if message[-1] != b'\x02':
