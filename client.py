@@ -40,6 +40,7 @@ class Opticwash:
 
     @staticmethod
     def print_buffer(buffer: bytearray):
+        print("-----------------------------")
         for byte, i in zip(buffer, range(len(buffer))):
             print(f"{i}:{hex(byte)}", end=' ')
 

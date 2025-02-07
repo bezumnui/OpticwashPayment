@@ -71,4 +71,6 @@ class Listener:
 
     def _process_status(self, command: "Command"):
         screen = ScreenID(command.data[1])
+        print("-----------------------------")
         print(f"Screen: {screen.name}")
+        print("-----------------------------")
