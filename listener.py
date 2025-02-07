@@ -19,11 +19,11 @@ class Listener:
         ser: serial.Serial = self.client.ser
 
         while self.active:
-            if ser.read(1) == 0x02:
+            r = ser.read(1)
+            if r == 0x02:
                 self.parse_new_message()
                 continue
-
-            print("Failed to start a new message.")
+            print(f"Failed to start a new message. Failed to read 0x02. Got {hex(r)}")
 
 
     def parse_new_message(self):
