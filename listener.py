@@ -1,5 +1,8 @@
 import threading
+import time
 import typing
+
+import serial
 
 
 class Listener:
@@ -7,14 +10,38 @@ class Listener:
         self.client = client
         self.active = True
         self.thread: "threading.Thread" = threading.Thread(target=self.__listen)
+        self.packet_timout = 0.5
 
     def start(self):
         self.thread.start()
 
     def __listen(self):
+        ser: serial.Serial = self.client.ser
+
         while self.active:
-            buffer = self.client.ser.read(64)
-            self._on_message(buffer)
+            if ser.read(1) == 0x02:
+                self.parse_new_message()
+                continue
+
+            print("Failed to start a new message.")
+
+
+    def parse_new_message(self):
+        message = bytearray(1)
+        message[0] = 0x02
+        last_packet = time.time()
+        while message[-1] != 0x03:
+            now = time.time()
+            message.append(self.client.ser.read(1))
+            if now - last_packet > self.packet_timout:
+                print("Timeout. Failed to receive a full message.")
+                if message[-1] != 0x02:
+                    print("Timeout. Failed to to start a new message.")
+                    return
+                return self.parse_new_message()
+        self._on_message(message)
+
+
 
     def stop(self):
         self.active = False
