@@ -21,6 +21,7 @@ class Listener:
         self.thread.join()
 
     def _on_message(self, message: bytearray):
+        print("Message received:")
         for byte, i in zip(message, range(len(message))):
             print(f"{i}:{hex(byte)}", end=' ')
         print()
