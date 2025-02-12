@@ -33,7 +33,7 @@ class Listener:
         message[0] = 0x02
         last_packet = time.time()
         ser: "serial.Serial" = self.client.ser
-        while message[-1] != 0x03:
+        while len(message) != 61 and message[-1] != 0x03:
             now = time.time()
             message.append(int.from_bytes(ser.read(1), 'big'))
             if now - last_packet > self.packet_timout:
