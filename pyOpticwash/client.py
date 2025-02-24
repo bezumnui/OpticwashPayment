@@ -8,7 +8,7 @@ from pyOpticwash.commands import OpticwashCommands
 from pyOpticwash.finite_state_machine import FSMState, OpticwashState
 from pyOpticwash.machine_keepalive import OpticwashScheduler
 from py_mdb_terminal.mdb_client import MDBClient
-from pyOpticwash.messages.message import CommandCode
+from pyOpticwash.messages.message import CommandCode, PacketType
 from pyOpticwash.messages.message_output import MessageOutput
 from pyOpticwash.opticwash_base import OpticwashBase
 
@@ -35,10 +35,11 @@ class PyOpticwash(OpticwashCommands, OpticwashBase):
         self.scheduler.stop_scheduler()
 
     def open_cabinet(self):
-        message = MessageOutput(CommandCode.OpenCabinet, 0, 0)
+        message = MessageOutput(CommandCode.OpenCabinet, PacketType.Send, 0)
         self.send_command(message)
 
     def send_raw_command(self, data: bytearray):
+        logging.debug(f"Sending raw data: {data.hex()}")
         self.ser.write(data)
 
     def send_command(self, message: MessageOutput):
