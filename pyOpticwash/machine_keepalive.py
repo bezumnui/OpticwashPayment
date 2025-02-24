@@ -19,6 +19,7 @@ class OpticwashScheduler:
             self._keep_alive_job = schedule.every(5).seconds.do(self.keepalive)
 
         if self.client.state in (OpticwashState.TransactionWaitingRealCard, OpticwashState.TransactionWaitingApproval):
+            print("Sending keep alive")
             self.client.send_keep_transaction_alive()
         else:
             schedule.cancel_job(self._keep_alive_job)
