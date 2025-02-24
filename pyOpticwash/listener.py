@@ -3,12 +3,13 @@ import time
 
 import serial
 
-from command import Command
-from screen import ScreenID
+from pyOpticwash.commands import OpticwashCommands
+from pyOpticwash.handlers.screen_id import ScreenID
+from pyOpticwash.messages.message_input import MessageInput
 
 
 class Listener:
-    def __init__(self, client: "Opticwash"):
+    def __init__(self, client: OpticwashCommands):
         self.client = client
         self.active = True
         self.thread: "threading.Thread" = threading.Thread(target=self.__listen)
@@ -18,7 +19,7 @@ class Listener:
         self.thread.start()
 
     def __listen(self):
-        ser: serial.Serial = self.client.ser
+        ser: serial.Serial = self.client.get_serial()
 
         while self.active:
             r = ser.read(1)
@@ -27,12 +28,11 @@ class Listener:
                 continue
             print(f"Failed to start a new message. Failed to read 0x02. Got {r}")
 
-
     def parse_new_message(self):
         message = bytearray(1)
         message[0] = 0x02
         last_packet = time.time()
-        ser: "serial.Serial" = self.client.ser
+        ser: "serial.Serial" = self.client.get_serial()
         while len(message) <= 61:
             now = time.time()
             message.append(int.from_bytes(ser.read(1), 'big'))
@@ -45,34 +45,30 @@ class Listener:
         if message[-1] != 0x03:
             print("Failed to find 0x03")
             return
-        self._on_message(message)
-
-
+        self._on_message_raw(message)
 
     def stop(self):
         self.active = False
         self.thread.join()
 
-    def _on_message(self, message: bytearray):
+    def _on_message_raw(self, message_raw: bytearray):
         print("Message received:")
-        for byte, i in zip(message, range(len(message))):
+        for byte, i in zip(message_raw, range(len(message_raw))):
             print(f"{i}:{hex(byte)}", end=' ')
         print()
         try:
-            command = Command.from_raw(message)
-            self._on_command(command)
+            message = MessageInput.unpack(message_raw)
+            self._on_message(message)
         except ValueError as e:
             print(f"Failed to parse command: {e}")
 
-
-    def _on_command(self, command: "Command"):
+    def _on_message(self, command: MessageInput):
         print(f"Command received: {command}")
         if command.command == 1:
             self._process_status(command)
         # else:
 
-
-    def _process_status(self, command: "Command"):
+    def _process_status(self, command: MessageInput):
         screen = ScreenID(command.data[1])
         print("-----------------------------")
         print(f"Screen: {screen.name}")
