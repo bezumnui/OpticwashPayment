@@ -2,7 +2,7 @@ import typing
 
 import serial
 
-from listener import Listener
+from pyOpticwash.listener import Listener
 from pyOpticwash.commands import OpticwashCommands
 from pyOpticwash.finite_state_machine import FSMState, OpticwashState
 from pyOpticwash.machine_keepalive import OpticwashScheduler
