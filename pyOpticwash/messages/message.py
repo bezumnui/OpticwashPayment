@@ -38,3 +38,6 @@ class Message:
     @staticmethod
     def int_to_bytes(value: int, length: int) -> bytes:
         return value.to_bytes(length, 'big')
+
+    def __repr__(self):
+        return f"Message(command={self.command}, packet_type={self.packet_type}, packet_label={self.packet_label}, data={self.data}, address={self.address})"
