@@ -1,12 +1,13 @@
 import logging
 from enum import Enum, auto
 
+from py_mdb_terminal.commands.structures.slave.cashless_slave_answer import CashlessError
+
 from pyOpticwash.finite_state_machine import OpticwashState
 from pyOpticwash.handlers.handler import OpticwashInputHandler
 from pyOpticwash.handlers.handler_descriptor import HandlerDescriptor
 from pyOpticwash.messages.message import CommandCode
 from pyOpticwash.messages.message_input import MessageInput
-from pyOpticwash.pyMDBTerminal.commands.structures.slave.cashless_slave_answer import CashlessError
 
 
 # Controller requests transaction approval after a card is swiped.

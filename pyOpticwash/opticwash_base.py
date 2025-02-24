@@ -4,7 +4,7 @@ import serial
 
 from pyOpticwash.finite_state_machine import FSMState
 from pyOpticwash.messages.message_output import MessageOutput
-from pyOpticwash.pyMDBTerminal.mdb_client import MDBClient
+from py_mdb_terminal.mdb_client import MDBClient
 
 
 class OpticwashBase:

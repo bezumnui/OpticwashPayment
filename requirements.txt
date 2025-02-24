@@ -1,0 +1,3 @@
+git+https://github.com/bezumnui/pyMDBTerminal
+pyserial~=3.5
+schedule~=1.2.2
