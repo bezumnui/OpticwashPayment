@@ -1,0 +1,3 @@
+[submodule "pyOpticwash/pyMDBTerminal"]
+	path = pyOpticwash/pyMDBTerminal
+	url = https://github.com/bezumnui/pyMDBTerminal

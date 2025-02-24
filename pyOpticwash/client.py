@@ -6,7 +6,7 @@ from pyOpticwash.listener import Listener
 from pyOpticwash.commands import OpticwashCommands
 from pyOpticwash.finite_state_machine import FSMState, OpticwashState
 from pyOpticwash.machine_keepalive import OpticwashScheduler
-from pyOpticwash.py_mdb_terminal.mdb_client import MDBClient
+from pyOpticwash.pyMDBTerminal.mdb_client import MDBClient
 from pyOpticwash.messages.message import CommandCode
 from pyOpticwash.messages.message_output import MessageOutput
 from pyOpticwash.opticwash_base import OpticwashBase

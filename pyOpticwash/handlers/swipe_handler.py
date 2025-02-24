@@ -6,7 +6,7 @@ from pyOpticwash.handlers.handler import OpticwashInputHandler
 from pyOpticwash.handlers.handler_descriptor import HandlerDescriptor
 from pyOpticwash.messages.message import CommandCode
 from pyOpticwash.messages.message_input import MessageInput
-from pyOpticwash.py_mdb_terminal.commands.structures.slave.cashless_slave_answer import CashlessError
+from pyOpticwash.pyMDBTerminal.commands.structures.slave.cashless_slave_answer import CashlessError
 
 
 # Controller requests transaction approval after a card is swiped.
