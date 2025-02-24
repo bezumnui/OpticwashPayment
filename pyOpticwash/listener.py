@@ -39,7 +39,9 @@ class Listener:
             now = time.time()
             message.append(int.from_bytes(ser.read(1), 'big'))
             if now - last_packet > self.packet_timout:
+
                 print("Timeout. Failed to receive a full message.")
+                print(message)
                 if message[-1] != 0x02:
                     print("Timeout. Failed to to start a new message.")
                     return
