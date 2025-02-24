@@ -22,6 +22,8 @@ class Listener:
         ser: serial.Serial = self.client.get_serial()
 
         while self.active:
+            if not ser.in_waiting:
+                continue
             r = ser.read(1)
             if r == b'\x02':
                 self.parse_new_message()
