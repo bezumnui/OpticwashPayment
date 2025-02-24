@@ -20,7 +20,7 @@ class MessageOutput(Message):
         buffer.append(self.packet_type.value & 0xFF)
         buffer.extend(b'\x32\x00')
         if self.data:
-            self.data + b"\x00" * (50 - len(self.data))
+            self.data += b"\x00" * (50 - len(self.data))
         buffer.extend(self.data or b'\x00' * 50)
         buffer.append(self.calculate_checksum(buffer[:59]))
         buffer.append(0x03)
