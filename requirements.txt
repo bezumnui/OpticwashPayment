@@ -2,3 +2,5 @@ git+https://github.com/bezumnui/pyMDBTerminal
 pyserial~=3.5
 schedule~=1.2.2
 gpiozero~=2.0.1
+lgpio
+RPi.GPIO
