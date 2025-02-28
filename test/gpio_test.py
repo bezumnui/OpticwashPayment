@@ -8,5 +8,5 @@ if __name__ == '__main__':
     while True:
         input("Press enter to on\n")
         display_controller_hid.on()
-        time.sleep(.2);
+        time.sleep(.1)
         display_controller_hid.off()
