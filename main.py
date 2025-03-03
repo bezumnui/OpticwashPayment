@@ -6,7 +6,6 @@ if __name__ == '__main__':
     logging.basicConfig(level=logging.DEBUG)
     opticwash = PyOpticwash()
     opticwash.start()
-    opticwash.keep_alive()
 
     input("Press enter to stop listening\n")
 

@@ -1,1 +1,2 @@
 import pyOpticwash.handlers
+import hid_logic
