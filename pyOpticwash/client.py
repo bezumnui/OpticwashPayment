@@ -52,7 +52,7 @@ class PyOpticwash(OpticwashCommands, OpticwashBase):
         return self.ser
 
     def get_mdb_client(self):
-        raise self.mdb_client
+        return self.mdb_client
 
     @property
     def state(self) -> FSMState:
@@ -67,6 +67,8 @@ if __name__ == '__main__':
     opticwash = PyOpticwash()
     opticwash.start()
     opticwash.keep_alive()
+
+    input("Press enter to stop listening\n")
 
     input("Press enter to stop listening\n")
 
