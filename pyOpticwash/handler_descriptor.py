@@ -1,7 +1,6 @@
-import typing
+import logging
 
-from pyOpticwash.finite_state_machine import OpticwashState
-from pyOpticwash.handlers.handler import OpticwashInputHandler
+from pyOpticwash.handler import OpticwashInputHandler
 from pyOpticwash.messages.message import CommandCode
 from pyOpticwash.opticwash_base import OpticwashBase
 
@@ -14,7 +13,6 @@ class HandlerDescriptor:
         """
         Use as a decorator for a class to register the handler
         :param command: command from `MessageInput`
-
         """
         def decorator(handler_cls: type[OpticwashInputHandler]):
             cls._register.update({command: handler_cls})
@@ -22,8 +20,10 @@ class HandlerDescriptor:
         return decorator
 
     @classmethod
-    def get_handler(cls, command: CommandCode, base: OpticwashBase):
-        handler_cls  = cls._register.get(command, None)
+    def get_handler(cls, code: CommandCode, base: OpticwashBase):
+        logging.info(str(cls._register))
+        handler_cls  = cls._register.get(code, None)
+
         if not handler_cls:
-            raise ValueError(f"No handler for {command.name}")
+            raise ValueError(f"No handler for {code.name}")
         return handler_cls(base)

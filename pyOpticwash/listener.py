@@ -4,8 +4,7 @@ import time
 import serial
 
 from pyOpticwash.commands import OpticwashCommands
-from pyOpticwash.handlers.handler_descriptor import HandlerDescriptor
-from pyOpticwash.handlers.screen_id import ScreenID
+from pyOpticwash.handler_descriptor import HandlerDescriptor
 from pyOpticwash.messages.message_input import MessageInput
 
 

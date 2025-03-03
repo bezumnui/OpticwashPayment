@@ -1,8 +1,8 @@
 import logging
 
 from pyOpticwash.finite_state_machine import OpticwashState
-from pyOpticwash.handlers.handler import OpticwashInputHandler
-from pyOpticwash.handlers.handler_descriptor import HandlerDescriptor
+from pyOpticwash.handler import OpticwashInputHandler
+from pyOpticwash.handler_descriptor import HandlerDescriptor
 from pyOpticwash.handlers.screen_id import ScreenID
 from pyOpticwash.handlers.system_error_code import SystemErrorCode
 from pyOpticwash.hid_logic import send_to_rp2040_swipe
