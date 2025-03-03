@@ -32,7 +32,6 @@ class Message:
         checksum = 0
         for byte in buffer:
             checksum += byte
-        # print(f"Checksum: {hex(checksum & 0xFF)}")
         return checksum & 0xFF
 
     @staticmethod

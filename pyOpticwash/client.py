@@ -43,7 +43,7 @@ class PyOpticwash(OpticwashCommands, OpticwashBase):
         self.ser.write(data)
 
     def send_command(self, message: MessageOutput):
-        logging.debug(f"Sending message: {message}")
+        logging.info(f"Sending message: {message}")
         message.packet_label = self.packet_id & 0xFFFF
         self.packet_id += 1
         self.send_raw_command(message.pack())
@@ -63,11 +63,12 @@ class PyOpticwash(OpticwashCommands, OpticwashBase):
 
 
 if __name__ == '__main__':
+    logging.basicConfig(level=logging.DEBUG)
     opticwash = PyOpticwash()
     opticwash.start()
     opticwash.keep_alive()
+
     input("Press enter to stop listening\n")
 
     # opticwash.open_cabinet()
-    opticwash.keep_alive()
     opticwash.stop()

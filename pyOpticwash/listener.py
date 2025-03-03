@@ -4,6 +4,7 @@ import time
 import serial
 
 from pyOpticwash.commands import OpticwashCommands
+from pyOpticwash.handlers.handler_descriptor import HandlerDescriptor
 from pyOpticwash.handlers.screen_id import ScreenID
 from pyOpticwash.messages.message_input import MessageInput
 
@@ -66,14 +67,7 @@ class Listener:
         except ValueError as e:
             print(f"Failed to parse command: {e}")
 
-    def _on_message(self, command: MessageInput):
-        print(f"Command received: {command}")
-        if command.command == 1:
-            self._process_status(command)
-        # else:
-
-    def _process_status(self, command: MessageInput):
-        screen = ScreenID(command.data[1])
-        print("-----------------------------")
-        print(f"Screen: {screen.name}")
-        print("-----------------------------")
+    def _on_message(self, message: MessageInput):
+        handler = HandlerDescriptor.get_handler(message.command, self.client)
+        if handler:
+            handler.handle(message)
