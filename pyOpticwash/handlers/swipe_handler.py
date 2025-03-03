@@ -64,6 +64,8 @@ class SwipeHandler(OpticwashInputHandler):
         logging.info(f"SwipeHandler: wash: {wash_type.name}, payment: {payment_type.name}, amount: {amount}")
 
         logging.info("Тут мы готовим терминал...")
+        self.base.state.set_state(OpticwashState.TransactionWaitingApproval)
+
         return
 
         # if not self.start_session(price):
