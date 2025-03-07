@@ -1,3 +1,4 @@
+import logging
 import threading
 import time
 
@@ -24,11 +25,16 @@ class Listener:
         while self.active:
             if not ser.in_waiting:
                 continue
-            r = ser.read(1)
-            if r == b'\x02':
-                self.parse_new_message()
-                continue
-            print(f"Failed to start a new message. Failed to read 0x02. Got {r}")
+            try:
+                r = ser.read(1)
+                if r == b'\x02':
+                    self.parse_new_message()
+                    continue
+                print(f"Failed to start a new message. Failed to read 0x02. Got {r}")
+            except serial.serialutil.SerialException as e:
+                time.sleep(1)
+                logging.error(f"Connection lost. Reconnecting.\"{e}\"")
+
 
     def parse_new_message(self):
         message = bytearray(1)

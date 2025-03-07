@@ -9,14 +9,15 @@ if __name__ == '__main__':
     opticwash.start()
 
     input("Enter to approve the transaction\n")
-
-    if opticwash.state == OpticwashState.TransactionWaitingApproval:
-        opticwash.approve_transaction()
-        print("Approving the transaction..")
-
-    else:
-        print("Transaction is not waiting for approval")
-
+    opticwash.approve_transaction()
+    #
+    # if opticwash.state == OpticwashState.TransactionWaitingApproval:
+    #     opticwash.approve_transaction()
+    #     print("Approving the transaction..")
+    #
+    # else:
+    #     print("Transaction is not waiting for approval")
+    #
 
     input("Press enter to stop listening\n")
 
