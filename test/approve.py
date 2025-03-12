@@ -2,7 +2,6 @@ import logging
 from time import sleep
 
 from pyOpticwash.client import PyOpticwash
-from pyOpticwash.finite_state_machine import OpticwashState
 
 if __name__ == '__main__':
     logging.basicConfig(level=logging.DEBUG)

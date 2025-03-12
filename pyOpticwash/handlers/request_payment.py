@@ -1,9 +1,9 @@
 import logging
 import threading
 import time
-from serial.tools import list_ports
 
 import config
+from pyOpticwash.misc.utils import get_mdb_by_vendor
 from py_mdb_terminal.mdb_client import MDBClient
 
 
@@ -11,11 +11,6 @@ from py_mdb_terminal.mdb_client import MDBClient
 def check_p_ack(data: str):
     return data.lower().split(",")[1] == "ack"
 
-def get_mdb_by_vendor(vendor: str) -> str | None:
-    device_list = list_ports.comports()
-    for device in device_list:
-        if device.vid == vendor:
-            return device.device
 
 
 class RawMDBListener:
