@@ -7,10 +7,9 @@ from pyOpticwash.misc.utils import get_mdb_by_vendor
 from py_mdb_terminal.mdb_client import MDBClient
 
 
-
 def check_p_ack(data: str):
+    print(data.lower().split(",")[1], "ack", data.lower().split(",")[1] == "ack")
     return data.lower().split(",")[1] == "ack"
-
 
 
 class RawMDBListener:
@@ -33,7 +32,6 @@ class RawMDBListener:
     def set_fail_callback(self, callback):
         self.fail_callback = callback
 
-
     def start_polling(self):
         self.working = True
         self.thread.start()
@@ -41,7 +39,6 @@ class RawMDBListener:
     def stop_polling(self):
         self.working = False
         self.thread.join()
-
 
     def success_payment(self):
         time.sleep(1)
@@ -60,9 +57,9 @@ class RawMDBListener:
         time.sleep(1)
         self.mdb.send_raw_message_with_response("R,13,04".encode(self.mdb.encoding))
 
-
     def wait_for_poll_answer(self, message_start_with: str):
         waiting = True
+
         def filter(data: str):
             nonlocal waiting
             if data.split(",")[1].startswith(message_start_with):
@@ -73,7 +70,6 @@ class RawMDBListener:
         while waiting:
             time.sleep(.1)
         return
-
 
     def __poll_processing(self):
         while self.working:
@@ -95,8 +91,6 @@ class RawMDBListener:
                 self.fail_payment()
                 self.fail_callback()
 
-
-
     def request_vending(self, amount: int):
         if not check_p_ack(self.mdb.send_raw_message_with_response("M,1".encode(self.mdb.get_encoding()))):
             print("M, 1 error")
@@ -111,8 +105,8 @@ class RawMDBListener:
         amount_hex = hex(amount & 0xFFFF)[2:]
         amount_hex = "0" * (4 - len(amount_hex)) + amount_hex
 
-        if not check_p_ack(self.mdb.send_raw_message_with_response(f"R,13,00{amount_hex}ffff".encode(self.mdb.get_encoding()))):
+        if not check_p_ack(
+                self.mdb.send_raw_message_with_response(f"R,13,00{amount_hex}ffff".encode(self.mdb.get_encoding()))):
             print("vending error")
             return
         print("requested")
-
