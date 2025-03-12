@@ -69,7 +69,7 @@ class PyOpticwash(OpticwashCommands, OpticwashBase):
         self.scheduler.keepalive()
 
     def get_raw_mdb(self):
-        pass
+        return self.raw_mdb
 
 
 
