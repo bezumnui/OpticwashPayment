@@ -3,6 +3,7 @@ import typing
 
 import serial
 
+from pyOpticwash.handlers.request_payment import RawMDBListener
 from pyOpticwash.listener import Listener
 from pyOpticwash.commands import OpticwashCommands
 from pyOpticwash.finite_state_machine import FSMState, OpticwashState
@@ -15,6 +16,10 @@ from pyOpticwash.opticwash_base import OpticwashBase
 
 class PyOpticwash(OpticwashCommands, OpticwashBase):
 
+
+
+
+
     def __init__(self):
         super().__init__()
         self.packet_id = 0
@@ -23,11 +28,13 @@ class PyOpticwash(OpticwashCommands, OpticwashBase):
         self.listener = Listener(self)
         self.mdb_client = MDBClient()
         self.scheduler = OpticwashScheduler(self)
+        self.raw_mdb = RawMDBListener(self)
 
     def start(self, port='/dev/ttyACM0'):
         self.scheduler.start_scheduler()
         self.ser = serial.Serial(port, 9600)
         self.listener.start()
+        self.raw_mdb.start_polling()
 
     def stop(self):
         self.listener.stop()
@@ -60,6 +67,10 @@ class PyOpticwash(OpticwashCommands, OpticwashBase):
 
     def keep_alive(self):
         self.scheduler.keepalive()
+
+    def get_raw_mdb(self):
+        pass
+
 
 
 if __name__ == '__main__':

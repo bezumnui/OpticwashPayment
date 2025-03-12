@@ -35,22 +35,16 @@ class PaymentType(Enum):
 @HandlerDescriptor.register(CommandCode.Swipe)
 class SwipeHandler(OpticwashInputHandler):
 
-    def start_session(self, price: int):
-        answer, res = self.base.get_mdb_client().start_session(price)
-        return self.handle_error(answer, res)
 
-    def approve_request(self, price: int):
-        answer, res = self.base.get_mdb_client().approve_vending_request(price)
-        return self.handle_error(answer, res)
 
-    def handle_error(self, answer: CashlessError | None, res: str):
-        logging.info(f"Got response: {answer.name}")
-        if isinstance(answer, CashlessError):
-            logging.error(f"Got error on response: {answer.name}, ({res}). Resetting...")
-            self.base.get_mdb_client().reset_reboot()
-            self.base.state.set_state(OpticwashState.Standby)
-            return False
-        return True
+    def approve_received(self):
+        self.base.approve_transaction()
+        self.base.state.set_state(OpticwashState.TransactionApproval)
+
+
+    def reject_received(self):
+        self.base.decline_transaction()
+        self.base.state.set_state(OpticwashState.Standby)
 
     def handle(self, message: MessageInput):
         if self.base.state != OpticwashState.TransactionWaitingRealCard:
@@ -59,15 +53,17 @@ class SwipeHandler(OpticwashInputHandler):
         amount = message.data[0]
         wash_type = WashType(message.data[1])
         payment_type = PaymentType(message.data[2])
-        price = int(amount * 100)
 
         logging.info(f"SwipeHandler: wash: {wash_type.name}, payment: {payment_type.name}, amount: {amount}")
 
         logging.info("Тут мы готовим терминал...")
         self.base.state.set_state(OpticwashState.TransactionWaitingApproval)
+        self.base.keep_alive()
+        mdb = self.base.get_raw_mdb()
 
-        return
-
+        mdb.set_success_callback(self.approve_received)
+        mdb.set_fail_callback(self.reject_received)
+        mdb.request_vending(20)
         # if not self.start_session(price):
         #     return False
         # if not self.approve_request(price):

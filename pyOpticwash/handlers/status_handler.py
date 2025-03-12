@@ -26,6 +26,6 @@ class StatusHandler(OpticwashInputHandler):
 
         if current_screen == ScreenID.InsertCashOrCard:
             send_to_rp2040_swipe()
-            self.base.state.set_state(OpticwashState.TransactionWaitingRealCard)
+            # self.base.state.set_state(OpticwashState.TransactionWaitingRealCard)
             self.base.keep_alive()
 

@@ -1,5 +1,6 @@
 import abc
 
+from pyOpticwash.commands import OpticwashCommands
 from pyOpticwash.messages.message_input import MessageInput
 from pyOpticwash.opticwash_base import OpticwashBase
 
@@ -7,7 +8,7 @@ from pyOpticwash.opticwash_base import OpticwashBase
 
 class OpticwashInputHandler(abc.ABC):
 
-    def __init__(self, base: OpticwashBase):
+    def __init__(self, base: OpticwashCommands):
         self.base = base
 
     @abc.abstractmethod
