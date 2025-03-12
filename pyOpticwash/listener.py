@@ -75,4 +75,5 @@ class Listener:
     def _on_message(self, message: MessageInput):
         handler = HandlerDescriptor.get_handler(message.command, self.client)
         if handler:
+            logging.debug("Handling message: " + handler.__class__.__name__)
             handler.handle(message)
