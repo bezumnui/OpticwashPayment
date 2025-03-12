@@ -14,7 +14,7 @@ class Listener:
         self.client = client
         self.active = True
         self.thread: "threading.Thread" = threading.Thread(target=self.__listen)
-        self.packet_timout = 0.5
+        self.packet_timout = 2
 
     def start(self):
         self.thread.start()
