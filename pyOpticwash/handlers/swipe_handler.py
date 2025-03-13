@@ -79,9 +79,11 @@ class SwipeHandler(OpticwashInputHandler):
         def lookup():
             while time.time() < end_time:
                 if self.base.state != OpticwashState.TransactionWaitingApproval:
+                    logging.info("terminal_lookup: Transaction is no longer waiting for approval")
                     return
                 time.sleep(1)
+            logging.info("terminal_lookup: Timeout reached")
             mdb = self.base.get_raw_mdb()
             mdb.request_reset()
-            mdb.cancel_payment()
+            self.reject_received()
         threading.Thread(target=lookup).start()
