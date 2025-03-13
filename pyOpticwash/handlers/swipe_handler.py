@@ -63,14 +63,10 @@ class SwipeHandler(OpticwashInputHandler):
 
         mdb.set_success_callback(self.approve_received)
         mdb.set_fail_callback(self.reject_received)
-        mdb.request_vending(20)
-        # if not self.start_session(price):
-        #     return False
-        # if not self.approve_request(price):
-        #     return False
-        #
-        # self.base.state.set_state(OpticwashState.TransactionWaitingApproval)
-        #
-        #
-
+        if wash_type == wash_type.eyewear:
+            mdb.request_vending(20)
+        elif wash_type == wash_type.jewelry:
+            mdb.request_vending(25)
+        else:
+            mdb.request_vending(5)
 

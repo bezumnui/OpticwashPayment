@@ -4,6 +4,7 @@ import time
 
 import serial
 
+from config import COMMAND_RECEIVING_TIMOUT_S
 from pyOpticwash.commands import OpticwashCommands
 from pyOpticwash.handler_descriptor import HandlerDescriptor
 from pyOpticwash.messages.message_input import MessageInput
@@ -14,7 +15,7 @@ class Listener:
         self.client = client
         self.active = True
         self.thread: "threading.Thread" = threading.Thread(target=self.__listen)
-        self.packet_timout = 2
+        self.packet_timout = COMMAND_RECEIVING_TIMOUT_S
 
     def start(self):
         self.thread.start()
