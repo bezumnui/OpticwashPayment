@@ -91,6 +91,9 @@ class RawMDBListener:
                 self.fail_payment()
                 self.fail_callback()
 
+    def request_reset(self):
+        self.mdb.send_raw("R,10".encode(self.mdb.get_encoding()))
+
     def request_vending(self, amount: int):
         if not check_p_ack(self.mdb.send_raw_message_with_response("M,1".encode(self.mdb.get_encoding()))):
             print("M, 1 error")

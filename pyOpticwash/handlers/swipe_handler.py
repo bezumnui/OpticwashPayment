@@ -1,4 +1,7 @@
 import logging
+import threading
+
+import time
 from enum import Enum, auto
 
 from py_mdb_terminal.commands.structures.slave.cashless_slave_answer import CashlessError
@@ -69,4 +72,16 @@ class SwipeHandler(OpticwashInputHandler):
             mdb.request_vending(25)
         else:
             mdb.request_vending(5)
+        self.terminal_lookup(120)
 
+    def terminal_lookup(self, total_time: int):
+        end_time = time.time() + total_time
+        def lookup():
+            while time.time() < end_time:
+                if self.base.state != OpticwashState.TransactionWaitingApproval:
+                    return
+                time.sleep(1)
+            mdb = self.base.get_raw_mdb()
+            mdb.request_reset()
+            mdb.cancel_payment()
+        threading.Thread(target=lookup).start()
