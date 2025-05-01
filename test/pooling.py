@@ -7,5 +7,5 @@ if __name__ == '__main__':
     opticwash = PyOpticwash()
     opticwash.raw_mdb.start_polling()
     while True:
-        opticwash.raw_mdb.send_raw(b"R,18")
+        opticwash.raw_mdb.mdb.send_raw(b"R,18")
         input()
