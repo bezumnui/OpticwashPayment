@@ -75,16 +75,19 @@ class RawMDBListener:
         while self.working:
             time.sleep(.5)
             r = self.mdb.send_raw_message_with_response("R,12".encode(self.mdb.encoding))
+
             for filter in self.polling_filters:
                 filter(r)
+
             message = r.split(",")
+
             if len(message) < 2:
                 continue
+
             if message[1].startswith("05"):
                 print(f"Successfully paid {int(message[1][2:], 16)} AED")
                 self.success_payment()
                 self.success_callback()
-
 
             elif message[1].startswith("06"):
                 print(f"Failed to pay. Error: {message[1][2:]}")
