@@ -6,6 +6,6 @@ if __name__ == '__main__':
     logging.basicConfig(level=logging.DEBUG)
     opticwash = PyOpticwash()
     opticwash.start()
-    opticwash.mdb_client.send_raw(b"R,18")
     while True:
-        pass
+        opticwash.mdb_client.send_raw(b"R,18")
+        input()
