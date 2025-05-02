@@ -25,6 +25,7 @@ class RawMDBListener:
         self.polling_filters = []
         self.success_callback = None
         self.fail_callback = None
+        self.__loop_delay = 0.1
 
     def set_success_callback(self, callback):
         self.success_callback = callback
@@ -73,7 +74,7 @@ class RawMDBListener:
 
     def __poll_processing(self):
         while self.working:
-            time.sleep(.5)
+            time.sleep(self.__loop_delay)
             r = self.mdb.send_raw_message_with_response("R,12".encode(self.mdb.encoding))
 
             for filter in self.polling_filters:
