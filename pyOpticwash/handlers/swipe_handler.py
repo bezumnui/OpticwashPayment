@@ -67,11 +67,11 @@ class SwipeHandler(OpticwashInputHandler):
         mdb.set_success_callback(self.approve_received)
         mdb.set_fail_callback(self.reject_received)
         if wash_type == wash_type.eyewear:
-            mdb.request_vending(20)
+            mdb.request_vending(2000)
         elif wash_type == wash_type.jewelry:
-            mdb.request_vending(25)
+            mdb.request_vending(2500)
         else:
-            mdb.request_vending(5)
+            mdb.request_vending(500)
         self.terminal_lookup(120)
 
     def terminal_lookup(self, total_time: int):
