@@ -109,7 +109,8 @@ class RawMDBListener:
             print("Reader mode error")
             return
 
-        self.wait_for_poll_answer("03")
+        # self.wait_for_poll_answer("03")
+        time.sleep(0.2)
 
         amount_hex = hex(amount & 0xFFFF)[2:]
         amount_hex = "0" * (4 - len(amount_hex)) + amount_hex
