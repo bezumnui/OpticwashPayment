@@ -29,3 +29,6 @@ class StatusHandler(OpticwashInputHandler):
             self.base.state.set_state(OpticwashState.TransactionWaitingRealCard)
             self.base.keep_alive()
 
+        elif current_screen == ScreenID.Standby:
+            self.base.state.set_state(OpticwashState.Standby)
+

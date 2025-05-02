@@ -28,6 +28,7 @@ class WashType(Enum):
     jewelry = auto()
     phone = auto()
 
+
 class PaymentType(Enum):
     free = 0
     cash = auto()
@@ -35,15 +36,29 @@ class PaymentType(Enum):
     card = auto()
 
 
+class Prices:
+    eyewear = 2000
+    jewelry = 2500
+    phone = 500
+
+    @classmethod
+    def get_price(cls, wash_type: WashType):
+        if wash_type == WashType.eyewear:
+            return cls.eyewear
+        elif wash_type == WashType.jewelry:
+            return cls.jewelry
+        elif wash_type == WashType.phone:
+            return cls.phone
+        else:
+            raise ValueError("Invalid wash type")
+
+
 @HandlerDescriptor.register(CommandCode.Swipe)
 class SwipeHandler(OpticwashInputHandler):
-
-
 
     def approve_received(self):
         self.base.approve_transaction()
         self.base.state.set_state(OpticwashState.TransactionApproval)
-
 
     def reject_received(self):
         self.base.decline_transaction()
@@ -66,16 +81,13 @@ class SwipeHandler(OpticwashInputHandler):
 
         mdb.set_success_callback(self.approve_received)
         mdb.set_fail_callback(self.reject_received)
-        if wash_type == wash_type.eyewear:
-            mdb.request_vending(2000)
-        elif wash_type == wash_type.jewelry:
-            mdb.request_vending(2500)
-        else:
-            mdb.request_vending(500)
+        mdb.request_vending(Prices.get_price(wash_type))
+
         self.terminal_lookup(120)
 
     def terminal_lookup(self, total_time: int):
         end_time = time.time() + total_time
+
         def lookup():
             while time.time() < end_time:
                 if self.base.state != OpticwashState.TransactionWaitingApproval:
@@ -86,4 +98,5 @@ class SwipeHandler(OpticwashInputHandler):
             mdb = self.base.get_raw_mdb()
             mdb.request_reset()
             self.reject_received()
+
         threading.Thread(target=lookup).start()
