@@ -1,0 +1,46 @@
+{
+	"sources" : 
+	[
+		{
+			"file" : "/Users/bezikmac/Documents/Arduino/Pico/test/src_hid/build/CMakeFiles/picotoolBuild"
+		},
+		{
+			"file" : "/Users/bezikmac/Documents/Arduino/Pico/test/src_hid/build/CMakeFiles/picotoolBuild.rule"
+		},
+		{
+			"file" : "/Users/bezikmac/Documents/Arduino/Pico/test/src_hid/build/CMakeFiles/picotoolBuild-complete.rule"
+		},
+		{
+			"file" : "/Users/bezikmac/Documents/Arduino/Pico/test/src_hid/build/picotool/src/picotoolBuild-stamp/picotoolBuild-build.rule"
+		},
+		{
+			"file" : "/Users/bezikmac/Documents/Arduino/Pico/test/src_hid/build/picotool/src/picotoolBuild-stamp/picotoolBuild-configure.rule"
+		},
+		{
+			"file" : "/Users/bezikmac/Documents/Arduino/Pico/test/src_hid/build/picotool/src/picotoolBuild-stamp/picotoolBuild-download.rule"
+		},
+		{
+			"file" : "/Users/bezikmac/Documents/Arduino/Pico/test/src_hid/build/picotool/src/picotoolBuild-stamp/picotoolBuild-install.rule"
+		},
+		{
+			"file" : "/Users/bezikmac/Documents/Arduino/Pico/test/src_hid/build/picotool/src/picotoolBuild-stamp/picotoolBuild-mkdir.rule"
+		},
+		{
+			"file" : "/Users/bezikmac/Documents/Arduino/Pico/test/src_hid/build/picotool/src/picotoolBuild-stamp/picotoolBuild-patch.rule"
+		},
+		{
+			"file" : "/Users/bezikmac/Documents/Arduino/Pico/test/src_hid/build/picotool/src/picotoolBuild-stamp/picotoolBuild-test.rule"
+		},
+		{
+			"file" : "/Users/bezikmac/Documents/Arduino/Pico/test/src_hid/build/picotool/src/picotoolBuild-stamp/picotoolBuild-update.rule"
+		}
+	],
+	"target" : 
+	{
+		"labels" : 
+		[
+			"picotoolBuild"
+		],
+		"name" : "picotoolBuild"
+	}
+}
