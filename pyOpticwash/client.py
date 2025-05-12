@@ -32,9 +32,13 @@ class PyOpticwash(OpticwashCommands, OpticwashBase):
 
     def start(self, port='/dev/ttyACM0'):
         self.scheduler.start_scheduler()
+        logging.debug("PyOpticwash: Starting serial port")
         self.ser = serial.Serial(port, 9600)
+        logging.debug("PyOpticwash: Starting the listener")
         self.listener.start()
+        logging.debug("PyOpticwash: Starting MDB client, Polling")
         self.raw_mdb.start_polling()
+
 
     def stop(self):
         self.listener.stop()

@@ -10,7 +10,6 @@ from pyOpticwash.messages.message import CommandCode
 from pyOpticwash.messages.message_input import MessageInput
 
 
-
 @HandlerDescriptor.register(CommandCode.Status)
 class StatusHandler(OpticwashInputHandler):
 
@@ -22,7 +21,8 @@ class StatusHandler(OpticwashInputHandler):
         price_jewelry = message.data[5]
         price_phone = message.data[6]
 
-        logging.info(f"Received StatusHandler: {system_error_code.name}, {current_screen.name}, price: {price_eyewear}, {price_jewelry}, {price_phone}")
+        logging.info(
+            f"Received StatusHandler: {system_error_code.name}, {current_screen.name}, price: {price_eyewear}, {price_jewelry}, {price_phone}")
 
         if current_screen == ScreenID.InsertCashOrCard:
             send_to_rp2040_swipe()
@@ -31,4 +31,3 @@ class StatusHandler(OpticwashInputHandler):
 
         elif current_screen == ScreenID.Standby:
             self.base.state.set_state(OpticwashState.Standby)
-

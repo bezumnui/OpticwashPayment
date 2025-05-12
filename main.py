@@ -10,7 +10,8 @@ if __name__ == '__main__':
 
     ac_port = get_mdb_by_vendor(config.AC_MODULE_VENDOR_ID)
     mdb_port = get_mdb_by_vendor(config.TERMINAL_VENDOR_ID)
-    while (not ac_port) or (not mdb_port):
+    # while (not ac_port) or (not mdb_port):
+    while not (ac_port and mdb_port):
         logging.info("Failed to find the ports. Trying again in 10 seconds")
         time.sleep(10)
         if not ac_port:
@@ -24,6 +25,10 @@ if __name__ == '__main__':
     logging.info("AC Module port: %s", ac_port)
     logging.info("Terminal port: %s", mdb_port)
     opticwash = PyOpticwash()
+    logging.info("Initiated")
     opticwash.start()
-    input()
+
+    while True:
+        pass
+
     opticwash.stop()
