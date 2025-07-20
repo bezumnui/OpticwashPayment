@@ -22,14 +22,26 @@ class PyOpticwash(OpticwashCommands, OpticwashBase):
         self.ser: typing.Optional[serial.Serial] = None
         self._state = FSMState(OpticwashState.Standby)
         self.listener = Listener(self)
-        self.mdb_client = MDBClient()
         self.scheduler = OpticwashScheduler(self)
         self.raw_mdb = RawMDBListener()
 
     def start_mdb(self):
-        logging.debug("PyOpticwash: Starting MDB client, Polling")
+        logging.info("PyOpticwash: Starting MDB Polling")
         self.raw_mdb.start()
+
+    def stop_mdb(self):
+        logging.info("PyOpticwash: Stopping MDB Polling")
+        self.raw_mdb.stop()
+
+    def start_polling(self):
+        logging.info("PyOpticwash: Starting MDB Polling")
         self.raw_mdb.start_polling()
+
+
+    def reset_mdb(self):
+        logging.info("PyOpticwash: Resetting MDB client")
+        self.raw_mdb.reset()
+
 
     def start_machine(self, port='/dev/ttyACM1'):
         self.scheduler.start_scheduler()
@@ -65,9 +77,6 @@ class PyOpticwash(OpticwashCommands, OpticwashBase):
 
     def get_serial(self) -> serial.Serial:
         return self.ser
-
-    def get_mdb_client(self):
-        return self.mdb_client
 
     @property
     def state(self) -> FSMState:

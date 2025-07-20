@@ -33,10 +33,6 @@ class OpticwashBase:
         raise NotImplementedError()
 
     @abc.abstractmethod
-    def get_mdb_client(self) -> "MDBClient":
-        raise NotImplementedError()
-
-    @abc.abstractmethod
     def keep_alive(self):
         raise NotImplementedError()
 

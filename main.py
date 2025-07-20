@@ -18,6 +18,11 @@ def start_mdb_using_watchdog(opticwash: PyOpticwash):
     watchdog = TimeoutWatchdog(restart_application, SECONDS_TO_CONNECT_MDB)
     watchdog.start()
     opticwash.start_mdb()
+    opticwash.reset_mdb()
+    opticwash.stop_mdb()
+    time.sleep(5)
+    opticwash.start_mdb()
+    opticwash.start_polling()
     watchdog.stop()
 
 def wait_for_devices_initialization():

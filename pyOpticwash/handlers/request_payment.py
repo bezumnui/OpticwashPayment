@@ -29,6 +29,9 @@ class RawMDBListener:
     def start(self):
         self.mdb.start()
 
+    def stop(self):
+        self.mdb.stop()
+
     def set_success_callback(self, callback):
         self.success_callback = callback
 
@@ -43,6 +46,9 @@ class RawMDBListener:
             return
 
         self.thread.start()
+
+    def reset(self):
+        self.mdb.send_raw_message("F,RESET".encode(self.mdb.get_encoding()))
 
     def stop_polling(self):
         self.working = False
