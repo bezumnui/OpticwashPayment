@@ -1,5 +1,0 @@
-/Users/bezikmac/Documents/Arduino/Pico/test/src_hid/build/_deps/picotool/picotool
-/Users/bezikmac/Documents/Arduino/Pico/test/src_hid/build/_deps/picotool/picotoolTargets.cmake
-/Users/bezikmac/Documents/Arduino/Pico/test/src_hid/build/_deps/picotool/picotoolTargets-release.cmake
-/Users/bezikmac/Documents/Arduino/Pico/test/src_hid/build/_deps/picotool/picotoolConfig.cmake
-/Users/bezikmac/Documents/Arduino/Pico/test/src_hid/build/_deps/picotool/picotoolConfigVersion.cmake
