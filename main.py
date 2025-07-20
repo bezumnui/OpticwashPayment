@@ -20,10 +20,20 @@ def start_mdb_using_watchdog(opticwash: PyOpticwash):
     opticwash.start_mdb()
     opticwash.reset_mdb()
     opticwash.stop_mdb()
-    time.sleep(5)
+    wait_for_mdb_port()
     opticwash.start_mdb()
     opticwash.start_polling()
     watchdog.stop()
+
+def wait_for_mdb_port():
+    mdb_port = get_mdb_by_vendor(config.TERMINAL_VENDOR_ID)
+
+    while not mdb_port:
+        logging.info("Failed to find mdb. Trying again in 5 seconds")
+        time.sleep(5)
+
+        mdb_port = get_mdb_by_vendor(config.TERMINAL_VENDOR_ID)
+        continue
 
 def wait_for_devices_initialization():
     ac_port = get_mdb_by_vendor(config.AC_MODULE_VENDOR_ID)
