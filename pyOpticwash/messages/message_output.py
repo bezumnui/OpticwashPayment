@@ -11,8 +11,10 @@ class MessageOutput(Message):
         else:
             buffer.extend(b'\x00\x00')
 
-        if self.packet_label is not None:
+        if self.packet_label is not None and isinstance(self.packet_label, int):
             buffer.extend(self.int_to_bytes(self.packet_label, 2))
+        elif self.packet_label is not None:
+            buffer.extend(self.packet_label)
         else:
             buffer.extend(b'\x00\x00')
 

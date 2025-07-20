@@ -13,19 +13,21 @@ def check_p_ack(data: str):
 
 
 class RawMDBListener:
-    def __init__(self, opticwash):
+    def __init__(self):
         device = get_mdb_by_vendor(config.TERMINAL_VENDOR_ID)
         if not device:
             raise Exception("MDB device not found")
 
         self.mdb = MDBClient(device)
-        self.mdb.start()
         self.working = False
         self.thread = threading.Thread(target=self.__poll_processing)
         self.polling_filters = []
         self.success_callback = None
         self.fail_callback = None
         self.__loop_delay = 0.1
+
+    def start(self):
+        self.mdb.start()
 
     def set_success_callback(self, callback):
         self.success_callback = callback

@@ -4,10 +4,11 @@ import typing
 import serial
 
 from pyOpticwash.handlers.request_payment import RawMDBListener
-from pyOpticwash.listener import Listener
+from pyOpticwash.listener import Listener, WaitingInputData
 from pyOpticwash.commands import OpticwashCommands
 from pyOpticwash.finite_state_machine import FSMState, OpticwashState
 from pyOpticwash.machine_keepalive import OpticwashScheduler
+from pyOpticwash.messages.message_input import MessageInput
 from py_mdb_terminal.mdb_client import MDBClient
 from pyOpticwash.messages.message import CommandCode, PacketType
 from pyOpticwash.messages.message_output import MessageOutput
@@ -15,11 +16,6 @@ from pyOpticwash.opticwash_base import OpticwashBase
 
 
 class PyOpticwash(OpticwashCommands, OpticwashBase):
-
-
-
-
-
     def __init__(self):
         super().__init__()
         self.packet_id = 0
@@ -28,22 +24,25 @@ class PyOpticwash(OpticwashCommands, OpticwashBase):
         self.listener = Listener(self)
         self.mdb_client = MDBClient()
         self.scheduler = OpticwashScheduler(self)
-        self.raw_mdb = RawMDBListener(self)
+        self.raw_mdb = RawMDBListener()
 
-    def start(self, port='/dev/ttyACM0'):
+    def start_mdb(self):
+        logging.debug("PyOpticwash: Starting MDB client, Polling")
+        self.raw_mdb.start()
+        self.raw_mdb.start_polling()
+
+    def start_machine(self, port='/dev/ttyACM1'):
         self.scheduler.start_scheduler()
         logging.debug("PyOpticwash: Starting serial port")
         self.ser = serial.Serial(port, 9600)
         logging.debug("PyOpticwash: Starting the listener")
         self.listener.start()
-        logging.debug("PyOpticwash: Starting MDB client, Polling")
-        self.raw_mdb.start_polling()
-
 
     def stop(self):
         self.listener.stop()
         self.ser.close()
         self.scheduler.stop_scheduler()
+
 
     def open_cabinet(self):
         message = MessageOutput(CommandCode.OpenCabinet, PacketType.Send, 0)
@@ -52,6 +51,11 @@ class PyOpticwash(OpticwashCommands, OpticwashBase):
     def send_raw_command(self, data: bytearray):
         logging.debug(f"Sending raw data: {data.hex()}")
         self.ser.write(data)
+
+    def send_command_with_answer(self, waiting_input: WaitingInputData, message: MessageOutput) -> MessageInput | None:
+        self.listener.set_input(waiting_input)
+        self.send_command(message)
+        return self.listener.get_input_blocking(waiting_input)
 
     def send_command(self, message: MessageOutput):
         logging.info(f"Sending message: {message}")
@@ -80,7 +84,7 @@ class PyOpticwash(OpticwashCommands, OpticwashBase):
 if __name__ == '__main__':
     logging.basicConfig(level=logging.DEBUG)
     opticwash = PyOpticwash()
-    opticwash.start()
+    opticwash.start_mdb()
     opticwash.keep_alive()
 
     input("Press enter to stop listening\n")

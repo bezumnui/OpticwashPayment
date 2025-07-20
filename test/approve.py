@@ -6,7 +6,7 @@ from pyOpticwash.client import PyOpticwash
 if __name__ == '__main__':
     logging.basicConfig(level=logging.DEBUG)
     opticwash = PyOpticwash()
-    opticwash.start()
+    opticwash.start_mdb()
     input("Press enter to approve\n")
     opticwash.send_keep_transaction_alive()
     print("Approving transaction..")

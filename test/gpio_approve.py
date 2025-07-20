@@ -17,7 +17,7 @@ def send_to_rp2040_swipe():
 if __name__ == '__main__':
     logging.basicConfig(level=logging.DEBUG)
     opticwash = PyOpticwash()
-    opticwash.start()
+    opticwash.start_mdb()
     input("Press enter to approve\n")
     opticwash.send_keep_transaction_alive()
     print("Swiping..")

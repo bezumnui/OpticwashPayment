@@ -4,6 +4,8 @@ import serial
 
 from pyOpticwash.finite_state_machine import FSMState
 from pyOpticwash.handlers.request_payment import RawMDBListener
+from pyOpticwash.waiting_input_data import WaitingInputData
+from pyOpticwash.messages.message_input import MessageInput
 from pyOpticwash.messages.message_output import MessageOutput
 from py_mdb_terminal.mdb_client import MDBClient
 
@@ -16,6 +18,10 @@ class OpticwashBase:
 
     @abc.abstractmethod
     def send_command(self, message: MessageOutput):
+        raise NotImplementedError()
+
+    @abc.abstractmethod
+    def send_command_with_answer(self, waiting_input: WaitingInputData, message: MessageOutput) -> MessageInput | None:
         raise NotImplementedError()
 
     @property

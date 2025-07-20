@@ -12,6 +12,8 @@ from pyOpticwash.handler_descriptor import HandlerDescriptor
 from pyOpticwash.messages.message import CommandCode
 from pyOpticwash.messages.message_input import MessageInput
 
+CENTS_TO_CASH = 100
+
 
 # Controller requests transaction approval after a card is swiped.
 # It will timeout in 20 seconds if there is nothing coming back from the PI
@@ -53,7 +55,7 @@ class Prices:
             raise ValueError("Invalid wash type")
 
 
-@HandlerDescriptor.register(CommandCode.Swipe)
+@HandlerDescriptor.register(CommandCode.Command)
 class SwipeHandler(OpticwashInputHandler):
 
     def approve_received(self):
@@ -81,7 +83,7 @@ class SwipeHandler(OpticwashInputHandler):
 
         mdb.set_success_callback(self.approve_received)
         mdb.set_fail_callback(self.reject_received)
-        mdb.request_vending(Prices.get_price(wash_type))
+        mdb.request_vending(amount * CENTS_TO_CASH)
 
         self.terminal_lookup(120)
 
