@@ -1,3 +1,5 @@
+import os
+
 from datetime import datetime
 
 import logging
@@ -33,7 +35,8 @@ class RawMDBListener:
 
     def __setup_logging(self):
         self.__logger.setLevel(logging.DEBUG)
-        file_handler = logging.FileHandler(datetime.now().strftime("mdb_log_%d.%m.%Y_%H.%M.%S"))
+        os.mkdir("log")
+        file_handler = logging.FileHandler(datetime.now().strftime("log/mdb_log_%d.%m.%Y_%H.%M.%S"))
         stream_handler = logging.StreamHandler()
 
         file_handler.setLevel(logging.DEBUG)
