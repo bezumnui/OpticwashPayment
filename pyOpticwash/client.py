@@ -38,7 +38,7 @@ class PyOpticwash(OpticwashCommands, OpticwashBase):
 
     def start_telemetry(self):
         logging.info("PyOpticwash: Starting telemetry")
-        self.raw_mdb.mdb.send_raw(b"X,1")
+        self.raw_mdb.mdb.send_raw_message(b"X,1")
 
 
     def stop_mdb(self):

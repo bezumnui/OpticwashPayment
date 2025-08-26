@@ -14,8 +14,9 @@ from py_mdb_terminal.mdb_client import MDBClient
 
 
 def check_p_ack(data: str):
-    print(data.lower().split(",")[1], "ack", data.lower().split(",")[1] == "ack")
-    return data.lower().split(",")[1] == "ack"
+    # print(data.lower().split(",")[1], "ack", data.lower().split(",")[1] == "ack")
+    # return data.lower().split(",")[1] == "ack"
+    return "ack" in data.lower()
 
 
 class RawMDBListener:
@@ -153,7 +154,8 @@ class RawMDBListener:
 
     def request_vending(self, amount: int):
 
-        if not check_p_ack(self.mdb.send_raw_message_with_response("R,14,01".encode(self.mdb.get_encoding()))):
+        response = self.mdb.send_raw_message_with_response("R,14,01".encode(self.mdb.get_encoding()));
+        if not check_p_ack(response):
             self.__logger.error("Reader mode error")
 
             return False
