@@ -25,14 +25,21 @@ class PyOpticwash(OpticwashCommands, OpticwashBase):
         self._state = FSMState(OpticwashState.Standby)
         self.listener = Listener(self)
         self.scheduler = OpticwashScheduler(self)
+
         if enable_mdb:
             self.raw_mdb = RawMDBListener()
+
         self.is_work = False
         self.mdb_enabled = enable_mdb
 
     def start_mdb(self):
         logging.info("PyOpticwash: Starting MDB")
         self.raw_mdb.start()
+
+    def start_telemetry(self):
+        logging.info("PyOpticwash: Starting telemetry")
+        self.raw_mdb.mdb.send_raw(b"X,1")
+
 
     def stop_mdb(self):
         logging.info("PyOpticwash: Stopping MDB")
@@ -108,6 +115,7 @@ if __name__ == '__main__':
     logging.basicConfig(level=logging.DEBUG)
     opticwash = PyOpticwash()
     opticwash.start_mdb()
+    opticwash.keep_alive()
     opticwash.keep_alive()
 
     input("Press enter to stop listening\n")

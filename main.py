@@ -19,6 +19,7 @@ def start_mdb_using_watchdog(opticwash: PyOpticwash):
     watchdog.start()
     opticwash.start_mdb()
     opticwash.start_polling()
+    opticwash.start_telemetry()
     watchdog.stop()
 
 def wait_for_mdb_port():

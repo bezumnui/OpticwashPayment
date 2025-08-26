@@ -1,3 +1,5 @@
+from logging.handlers import RotatingFileHandler
+
 import os
 
 from datetime import datetime
@@ -39,7 +41,12 @@ class RawMDBListener:
         if not os.path.exists("log"):
             os.mkdir("log")
 
-        file_handler = logging.FileHandler(datetime.now().strftime("log/mdb_log_%d.%m.%Y_%H.%M.%S"))
+        file_handler = RotatingFileHandler(
+            filename=datetime.now().strftime("log/mdb_listener_log_%d.%m.%Y_%H.%M.%S"),
+            maxBytes=5 * 1024 * 1024,
+            backupCount=5
+        )
+
         stream_handler = logging.StreamHandler()
 
         file_handler.setLevel(logging.DEBUG)
