@@ -32,11 +32,6 @@ class StatusHandler(OpticwashInputHandler):
 
         if current_screen == ScreenID.InsertCashOrCard:
             self.do_with_repetition_in_thread(try_send_to_rp2040_swipe, 1, 5)
-            # if try_send_to_rp2040_swipe() == False:
-            #     pass
-            #     self.base.cancel_transaction()
-            #     return
-
             self.base.state.set_state(OpticwashState.TransactionWaitingRealCard)
             self.base.keep_alive()
 

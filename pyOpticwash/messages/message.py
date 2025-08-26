@@ -14,7 +14,7 @@ class CommandCode(Enum):
 
     FIRMWARE_UPDATE = 160
     ERASE_APP = 161
-    SEND_BLOCK = 162
+    SEND_BLOCK = 0xA2
     BLOCKS_END = 163
 
     CHECKSUM_REQUEST = 166

@@ -1,3 +1,5 @@
+from datetime import datetime
+
 import typing
 
 import logging
@@ -28,21 +30,24 @@ class Listener:
         self.thread.start()
 
     def __listen(self):
-        ser: serial.Serial = self.client.get_serial()
+            ser: serial.Serial = self.client.get_serial()
 
-        while self.active:
-            if not ser.in_waiting:
-                continue
-            try:
-                r = ser.read(1)
-                if r == b'\x02':
-                    self.parse_new_message()
-                    continue
-                print(f"Failed to start a new message. Failed to read 0x02. Got {r}")
-            except serial.serialutil.SerialException as e:
-                time.sleep(1)
-                logging.error(f"Connection lost. Reconnecting.\"{e}\"")
+            while self.active:
+                try:
+                    if not ser.in_waiting:
+                        continue
+                    try:
+                        r = ser.read(1)
+                        if r == b'\x02':
+                            self.parse_new_message()
+                            continue
+                        logging.error(f"Failed to start a new message. Failed to read 0x02. Got {r}")
+                    except serial.serialutil.SerialException as e:
+                        time.sleep(1)
+                        logging.error(f"Connection lost. Reconnecting.\"{e}\"")
 
+                except Exception as e:
+                    logging.exception(e)
 
     def parse_new_message(self):
         message = bytearray(1)
@@ -88,6 +93,8 @@ class Listener:
         if handler:
             logging.debug("Handling message: " + handler.__class__.__name__)
             handler.handle(message)
+        else:
+            logging.info(f"No handler was found for {message.command}")
 
     def _try_process_waiting_input(self, message: MessageInput):
         to_be_processed = []

@@ -1,3 +1,5 @@
+from datetime import datetime
+
 import logging
 import threading
 import time
@@ -26,6 +28,25 @@ class RawMDBListener:
         self.fail_callback = None
         self.__loop_delay = 0.1
 
+        self.__logger = logging.getLogger(RawMDBListener.__name__)
+        self.__setup_logging()
+
+    def __setup_logging(self):
+        self.__logger.setLevel(logging.DEBUG)
+        file_handler = logging.FileHandler(datetime.now().strftime("mdb_log_%d.%m.%Y_%H.%M.%S"))
+        stream_handler = logging.StreamHandler()
+
+        file_handler.setLevel(logging.DEBUG)
+        stream_handler.setLevel(logging.DEBUG)
+
+        formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+        file_handler.setFormatter(formatter)
+        stream_handler.setFormatter(formatter)
+
+        self.__logger.addHandler(file_handler)
+        self.__logger.addHandler(stream_handler)
+
+
     def start(self):
         self.mdb.start()
 
@@ -42,8 +63,10 @@ class RawMDBListener:
         self.working = True
 
         if not check_p_ack(self.mdb.send_raw_message_with_response("M,1".encode(self.mdb.get_encoding()))):
-            print("M, 1 error")
+            self.__logger.error("M, 1 error")
             return
+
+        self.__logger.info("MDB, manual mode.")
 
         self.thread.start()
 
@@ -85,6 +108,9 @@ class RawMDBListener:
             time.sleep(.1)
         return
 
+    def __log_telemetry(self, ):
+        ...
+
     def __poll_processing(self):
         while self.working:
             time.sleep(self.__loop_delay)
@@ -99,12 +125,13 @@ class RawMDBListener:
                 continue
 
             if message[1].startswith("05"):
-                print(f"Successfully paid {int(message[1][2:], 16)} AED")
+                self.__logger.info(f"Successfully paid {int(message[1][2:], 16)} AED")
                 self.success_payment()
                 self.success_callback()
 
             elif message[1].startswith("06"):
-                print(f"Failed to pay. Error: {message[1][2:]}")
+                self.__logger.error(f"Failed to pay. Error: {message[1][2:]}")
+
                 self.fail_payment()
                 self.fail_callback()
 
@@ -114,8 +141,9 @@ class RawMDBListener:
     def request_vending(self, amount: int):
 
         if not check_p_ack(self.mdb.send_raw_message_with_response("R,14,01".encode(self.mdb.get_encoding()))):
-            print("Reader mode error")
-            return
+            self.__logger.error("Reader mode error")
+
+            return False
 
         # self.wait_for_poll_answer("03")
         time.sleep(0.2)
@@ -125,6 +153,8 @@ class RawMDBListener:
 
         if not check_p_ack(
                 self.mdb.send_raw_message_with_response(f"R,13,00{amount_hex}ffff".encode(self.mdb.get_encoding()))):
-            print("vending error")
-            return
-        print("requested")
+            self.__logger.error("Vending error")
+            return False
+
+        return True
+

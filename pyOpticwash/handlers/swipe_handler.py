@@ -4,7 +4,6 @@ import threading
 import time
 from enum import Enum, auto
 
-from py_mdb_terminal.commands.structures.slave.cashless_slave_answer import CashlessError
 
 from pyOpticwash.finite_state_machine import OpticwashState
 from pyOpticwash.handler import OpticwashInputHandler
@@ -57,24 +56,25 @@ class Prices:
 
 @HandlerDescriptor.register(CommandCode.Command)
 class SwipeHandler(OpticwashInputHandler):
+    HARDCODED_AMOUNT = 1
 
     def approve_received(self):
         self.base.approve_transaction()
         self.base.state.set_state(OpticwashState.TransactionApproval)
+
 
     def reject_received(self):
         self.base.decline_transaction()
         self.base.state.set_state(OpticwashState.Standby)
 
     def handle(self, message: MessageInput):
-        if self.base.state != OpticwashState.TransactionWaitingRealCard:
-            return False
-
         amount = message.data[0]
         wash_type = WashType(message.data[1])
         payment_type = PaymentType(message.data[2])
-
         logging.info(f"SwipeHandler: wash: {wash_type.name}, payment: {payment_type.name}, amount: {amount}")
+
+        # if self.base.state != OpticwashState.TransactionWaitingRealCard and BYPASS_INSERT_STATE == False:
+        #     return False
 
         logging.info("Тут мы готовим терминал...")
         self.base.state.set_state(OpticwashState.TransactionWaitingApproval)
@@ -83,7 +83,11 @@ class SwipeHandler(OpticwashInputHandler):
 
         mdb.set_success_callback(self.approve_received)
         mdb.set_fail_callback(self.reject_received)
-        mdb.request_vending(amount * CENTS_TO_CASH)
+
+        # if not mdb.request_vending(amount * CENTS_TO_CASH):
+        if not mdb.request_vending(SwipeHandler.HARDCODED_AMOUNT * CENTS_TO_CASH):
+            return self.reject_received()
+
 
         self.terminal_lookup(120)
 

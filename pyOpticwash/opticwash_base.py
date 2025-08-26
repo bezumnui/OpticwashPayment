@@ -7,7 +7,6 @@ from pyOpticwash.handlers.request_payment import RawMDBListener
 from pyOpticwash.waiting_input_data import WaitingInputData
 from pyOpticwash.messages.message_input import MessageInput
 from pyOpticwash.messages.message_output import MessageOutput
-from py_mdb_terminal.mdb_client import MDBClient
 
 
 class OpticwashBase:

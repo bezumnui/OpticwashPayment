@@ -1,3 +1,5 @@
+import time
+
 import logging
 import typing
 
@@ -16,21 +18,24 @@ from pyOpticwash.opticwash_base import OpticwashBase
 
 
 class PyOpticwash(OpticwashCommands, OpticwashBase):
-    def __init__(self):
+    def __init__(self, enable_mdb = True):
         super().__init__()
         self.packet_id = 0
         self.ser: typing.Optional[serial.Serial] = None
         self._state = FSMState(OpticwashState.Standby)
         self.listener = Listener(self)
         self.scheduler = OpticwashScheduler(self)
-        self.raw_mdb = RawMDBListener()
+        if enable_mdb:
+            self.raw_mdb = RawMDBListener()
+        self.is_work = False
+        self.mdb_enabled = enable_mdb
 
     def start_mdb(self):
-        logging.info("PyOpticwash: Starting MDB Polling")
+        logging.info("PyOpticwash: Starting MDB")
         self.raw_mdb.start()
 
     def stop_mdb(self):
-        logging.info("PyOpticwash: Stopping MDB Polling")
+        logging.info("PyOpticwash: Stopping MDB")
         self.raw_mdb.stop()
 
     def start_polling(self):
@@ -44,16 +49,22 @@ class PyOpticwash(OpticwashCommands, OpticwashBase):
 
 
     def start_machine(self, port='/dev/ttyACM1'):
+        self.is_work = True
         self.scheduler.start_scheduler()
         logging.debug("PyOpticwash: Starting serial port")
         self.ser = serial.Serial(port, 9600)
         logging.debug("PyOpticwash: Starting the listener")
         self.listener.start()
 
+    def idle(self):
+        while self.is_work:
+            time.sleep(0.1)
+
     def stop(self):
         self.listener.stop()
         self.ser.close()
         self.scheduler.stop_scheduler()
+        self.is_work = False
 
 
     def open_cabinet(self):
@@ -62,6 +73,9 @@ class PyOpticwash(OpticwashCommands, OpticwashBase):
 
     def send_raw_command(self, data: bytearray):
         logging.debug(f"Sending raw data: {data.hex()}")
+        for byte, i in zip(data, range(len(data))):
+            print(f"{i}:{hex(byte)}", end=' ')
+
         self.ser.write(data)
 
     def send_command_with_answer(self, waiting_input: WaitingInputData, message: MessageOutput) -> MessageInput | None:

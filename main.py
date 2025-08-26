@@ -18,10 +18,6 @@ def start_mdb_using_watchdog(opticwash: PyOpticwash):
     watchdog = TimeoutWatchdog(restart_application, SECONDS_TO_CONNECT_MDB)
     watchdog.start()
     opticwash.start_mdb()
-    opticwash.reset_mdb()
-    opticwash.stop_mdb()
-    wait_for_mdb_port()
-    opticwash.start_mdb()
     opticwash.start_polling()
     watchdog.stop()
 
@@ -41,6 +37,9 @@ def wait_for_devices_initialization():
 
     while not (ac_port and mdb_port):
         logging.info("Failed to find the ports. Trying again in 10 seconds")
+
+        logging.info(f"ac_port: {bool(ac_port)}, mdb_port: {bool(mdb_port)}")
+
         time.sleep(10)
         if not ac_port:
             ac_port = get_mdb_by_vendor(config.AC_MODULE_VENDOR_ID)
@@ -55,19 +54,24 @@ def wait_for_devices_initialization():
 
 
 def poll_application(ac_port, opticwash):
+    opticwash.start_machine(ac_port)
+    time.sleep(3)
+    opticwash.request_status()
+
     while True:
         try:
-            opticwash.start_machine(ac_port)
+            opticwash.idle()
         except Exception as e:
             logging.exception(e)
-            continue
+            return
 
 
 def main():
     setup_logger()
     wait_for_devices_initialization()
+
     opticwash = PyOpticwash()
-    logging.info("Initiated")
+    logging.info(f"Initiated. Version: {config.VERSION}")
     start_mdb_using_watchdog(opticwash)
     poll_application(get_mdb_by_vendor(config.AC_MODULE_VENDOR_ID), opticwash)
     opticwash.stop()
