@@ -1,3 +1,5 @@
+from queue import Empty
+
 from logging.handlers import RotatingFileHandler
 
 import os
@@ -128,7 +130,11 @@ class RawMDBListener:
     def __poll_processing(self):
         while self.working:
             time.sleep(self.__loop_delay)
-            r = self.mdb.send_raw_message_with_response("R,12".encode(self.mdb.encoding))
+            try:
+                r = self.mdb.send_raw_message_with_response("R,12".encode(self.mdb.encoding))
+            except Empty:
+                logging.info("Polling timeout. Retrying...")
+                continue
 
             for filter in self.polling_filters:
                 filter(r)

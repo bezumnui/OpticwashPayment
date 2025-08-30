@@ -41,6 +41,7 @@ class Listener:
                         if r == b'\x02':
                             self.parse_new_message()
                             continue
+
                         logging.error(f"Failed to start a new message. Failed to read 0x02. Got {r}")
                     except serial.serialutil.SerialException as e:
                         time.sleep(1)
