@@ -32,6 +32,7 @@ class Listener:
     def __listen(self):
             ser: serial.Serial = self.client.get_serial()
 
+            error_occured = False
             while self.active:
                 try:
                     if not ser.in_waiting:
@@ -48,7 +49,10 @@ class Listener:
                         logging.error(f"Connection lost. Reconnecting.\"{e}\"")
 
                 except Exception as e:
-                    logging.exception(e)
+                    if not error_occured:
+                        logging.exception(e)
+                        error_occured = True
+                    time.sleep(5)
 
     def parse_new_message(self):
         message = bytearray(1)
