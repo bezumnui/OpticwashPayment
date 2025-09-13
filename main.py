@@ -6,6 +6,8 @@ import time
 import config
 from logger import setup_logger
 from pyOpticwash.client import PyOpticwash
+from pyOpticwash.messages.message import CommandCode, PacketType
+from pyOpticwash.messages.message_output import MessageOutput
 from pyOpticwash.misc.utils import get_mdb_by_vendor
 from timeout_watchdog import TimeoutWatchdog
 
@@ -68,6 +70,12 @@ def poll_application(ac_port, opticwash):
 
 
 def main():
+    #
+    # msg = MessageOutput(CommandCode.Command, PacketType.ACK, 0, b"\x01").pack()
+    #
+    # for i in range(len(msg)):
+    #     print(f"{hex(msg[i])}", end=" ")
+
     setup_logger()
     wait_for_devices_initialization()
 
